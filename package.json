@@ -1,12 +1,16 @@
 {
   "name": "nextjs-breadcrumbs2",
-  "version": "1.0.0",
+  "version": "2.0.1",
   "description": "A dynamic, highly customizable breadcrumbs component for Next.js",
-  "main": "dist/index.js",
   "source": "src/index.tsx",
+  "main": "dist/index.cjs",
+  "module": "dist/index.module.js",
+  "unpkg": "dist/index.umd.js",
+  "types": "dist/index.d.ts",
   "repository": "https://github.com/SimonHausdorf/nextjs-breadcrumbs2",
   "author": "Simon Hausdorf",
   "license": "MIT",
+  "type": "module",
   "contributors": [
     "NiklasMencke"
   ],
@@ -16,9 +20,15 @@
   "scripts": {
     "build": "tsc && cp src/styles.css dist/styles.css"
   },
+  "peerDependencies": {
+    "next": "^13.0.0",
+    "react": "^18.2.0"
+  },
   "devDependencies": {
+    "@tsconfig/node16": "^1.0.3",
     "@tsconfig/node16-strictest-esm": "^1.0.3",
     "@types/react": "^18.0.24",
+    "microbundle": "^0.15.1",
     "next": "^13.0.0",
     "prettier": "^2.7.1",
     "react": "^18.2.0",
