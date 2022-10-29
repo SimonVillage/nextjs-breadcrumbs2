@@ -1,6 +1,6 @@
 {
   "name": "nextjs-breadcrumbs2",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "A dynamic, highly customizable breadcrumbs component for Next.js",
   "source": "src/index.tsx",
   "main": "dist/index.cjs",
@@ -18,7 +18,7 @@
     "node": ">=16"
   },
   "scripts": {
-    "build": "tsc && cp src/styles.css dist/styles.css"
+    "build": "npx microbundle --no-sourcemap --no-compress --jsx React.createElement"
   },
   "peerDependencies": {
     "next": "^13.0.0",
