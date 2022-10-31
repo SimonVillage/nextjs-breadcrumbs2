@@ -12,6 +12,10 @@ I forked this package as the original package wasn't compatible with the new Nex
 import Breadcrumbs from 'nextjs-breadcrumbs2';
 ```
 
+## Next.js 13 App directory structure
+
+Make sure that you add `'use client'` on top of the file which imports `nextjs-breadcrumbs2` as client side rendering is required.
+
 ## Installation
 
 ```bash

@@ -1,19 +1,9 @@
 /** @format */
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
-
-/**
- * Takes an URL String and removes query params and hash params
- *
- * @param url - The URL string
- * @returns The transformed URL string
- *
- */
-const getPathFromUrl = (url: string): string => {
-  return url.split(/[?#]/)[0] as string;
-};
+import React, { ReactNode, useEffect, useState } from "react";
 
 /**
  * Takes a breadcrumb title (from url path) and replaces
@@ -27,17 +17,15 @@ const convertBreadcrumb = (
   title: string,
   toUpperCase: boolean | undefined,
   replaceCharacterList: Array<CharacterMap> | undefined,
-  transformLabel?: ((title: string) => React.ReactNode) | undefined
-): React.ReactNode => {
-  let transformedTitle = getPathFromUrl(title);
-
+  transformLabel?: ((title: string) => ReactNode) | undefined
+): ReactNode => {
   if (transformLabel) {
-    return transformLabel(transformedTitle);
+    return transformLabel(title);
   }
 
   if (replaceCharacterList) {
     for (let i = 0; i < replaceCharacterList.length; i++) {
-      transformedTitle = transformedTitle.replaceAll(
+      title = title.replaceAll(
         (replaceCharacterList[i] || { from: "" }).from,
         (replaceCharacterList[i] || { to: "" }).to
       );
@@ -45,9 +33,7 @@ const convertBreadcrumb = (
   }
 
   // decode for utf-8 characters and return ascii.
-  return toUpperCase
-    ? decodeURI(transformedTitle).toUpperCase()
-    : decodeURI(transformedTitle);
+  return toUpperCase ? decodeURI(title).toUpperCase() : decodeURI(title);
 };
 
 export interface Breadcrumb {
@@ -85,7 +71,7 @@ export interface BreadcrumbsProps {
   replaceCharacterList?: Array<CharacterMap> | undefined;
 
   /** A transformation function that allows to customize the label strings. Receives the label string and has to return a string or React Component */
-  transformLabel?: ((title: string) => React.ReactNode) | undefined;
+  transformLabel?: ((title: string) => ReactNode) | undefined;
 
   /** Array containing all the indexes of the path that should be omitted and not be rendered as labels. If we have a path like '/home/category/1' then you might want to pass '[2]' here, which omits the breadcrumb label '1'. Indexes start with 0. Example: [2] Default: undefined */
   omitIndexList?: Array<number> | undefined;
@@ -163,14 +149,16 @@ const Breadcrumbs = ({
   activeItemStyle,
   activeItemClassName,
 }: BreadcrumbsProps) => {
-  const router = useRouter();
+  const route = useRouter();
+  const pathname = usePathname() || route.asPath; // Check for both as Next.js 13 uses next/navigation
+
   const [breadcrumbs, setBreadcrumbs] = useState<Array<Breadcrumb> | null>(
     null
   );
 
   useEffect(() => {
-    if (router) {
-      const linkPath = router.asPath.split("/");
+    if (pathname) {
+      const linkPath = pathname.split("/");
       linkPath.shift();
 
       const pathArray = linkPath.map((path, i) => {
@@ -182,7 +170,7 @@ const Breadcrumbs = ({
 
       setBreadcrumbs(pathArray);
     }
-  }, [router]);
+  }, [pathname]);
 
   if (!breadcrumbs) {
     return null;
